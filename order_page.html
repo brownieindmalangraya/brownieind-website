@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM PEMESANAN - Brownie.ind</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Link to your external CSS file -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- Styles for New Pickup Options (Better to move to style.css) --- */
+        .pickup-options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .pickup-option-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pickup-option-card:hover {
+            border-color: var(--accent-gold);
+            background-color: #fff;
+        }
+
+        .pickup-option-card.active {
+            border-color: var(--primary-brown);
+            background-color: var(--secondary-cream);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .pickup-option-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .pickup-option-card .option-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pickup-option-card .option-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .pickup-details {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .pickup-option-card.active .pickup-details {
+            display: block;
+        }
+
+        .pickup-details label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .pickup-details-inputs {
+            display: flex;
+            gap: 15px;
+        }
+        .pickup-details-inputs input {
+            width: 100%;
+        }
+
+        /* --- New Styles for Variant Rows & Total Price --- */
+        .variant-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto; /* Varian | Jumlah | Hapus */
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            transition: box-shadow 0.2s ease;
+        }
+        .variant-row:focus-within {
+            box-shadow: 0 0 0 2px var(--accent-gold);
+        }
+        .variant-row select, .variant-row input {
+            font-size: 1rem;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .variant-row input[type="number"] {
+            width: 80px; /* Fixed width for quantity */
+        }
+
+        .btn-remove-variant {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border: none;
+            background-color: transparent;
+            color: #dc3545;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-remove-variant:hover {
+            color: #a71d2a;
+            background-color: #f8d7da;
+            transform: scale(1.1);
+        }
+
+        .btn-add-variant {
+            background-color: #79a86b; /* Greenish */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-add-variant:hover {
+            background-color: #638c57;
+        }
+
+        .total-price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--secondary-cream);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .total-price-display span:first-child {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+        }
+        .total-price-display #totalPrice {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">Brownie.ind</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="brownies.html">Our Brownies</a></li>
+                <li><a href="custom.html">Custom Creations</a></li>
+                <li><a href="story.html">Our Story</a></li>
+                <li><a href="order_page.html" class="btn-nav">Order Now</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content - Order Form Section -->
+    <main>
+        <section class="page-header">
+            <h1>Form Pemesanan</h1>
+            <p>Lengkapi detail di bawah ini untuk memesan brownies lezat kami.</p>
+        </section>
+
+        <section class="custom-form-section">
+            <form id="orderForm" class="custom-form">
+                
+                <!-- Nama Pemesan -->
+                <div class="form-group">
+                    <label for="namaPemesan">📍 Nama Pemesan :</label>
+                    <input type="text" id="namaPemesan" name="namaPemesan" placeholder="Masukkan nama lengkap Anda" required>
+                </div>
+
+                <!-- Bagian untuk menambahkan varian -->
+                <div class="form-group">
+                     <label>📦 Pesanan Anda :</label>
+                    <div id="variantsContainer">
+                        <!-- Varian akan ditambahkan secara dinamis oleh JS -->
+                    </div>
+                    <button type="button" id="addVariantBtn" class="btn-add-variant">Tambah Varian Lain</button>
+                </div>
+                <h2></h2>
+
+                <!-- Total Harga -->
+                <div id="totalPriceDisplay" class="total-price-display">
+                    <span>Total Yang Harus Dibayarkan :</span>
+                    <span id="totalPrice">Rp 0</span>
+                </div>
+
+                <!-- Alamat -->
+                <h2></h2>
+                <div class="form-group">
+                    <label for="alamat">📍 Alamat Pengiriman :</label>
+                    <textarea id="alamat" name="alamat" rows="4" placeholder="Masukkan alamat lengkap pengiriman Anda" required></textarea>
+                </div>
+
+                <!-- Pengambilan -->
+                <div class="form-group">
+                    <label>📍 Metode Pengambilan :</label>
+                    <div class="pickup-options-container">
+                        <!-- Self Pickup Option -->
+                        <div class="pickup-option-card active" data-value="Self Pickup">
+                            <input type="radio" name="pengambilan" value="Self Pickup" checked required>
+                            <div class="option-title">
+                                <span>🛍️</span> Self Pickup
+                            </div>
+                            <p class="option-description">Ambil langsung di lokasi kami.</p>
+                            <div class="pickup-details">
+                                <label for="tanggalPengambilan">Pilih Tanggal & Jam :</label>
+                                <div class="pickup-details-inputs">
+                                    <input type="date" id="tanggalPengambilan" name="tanggalPengambilan" required>
+                                    <input type="time" id="jamPengambilan" name="jamPengambilan" required>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Gosend Option -->
+                        <div class="pickup-option-card" data-value="Gosend">
+                            <input type="radio" name="pengambilan" value="Gosend">
+                             <div class="option-title">
+                                <span>🛵</span> Gosend
+                            </div>
+                            <p class="option-description">Dikirim langsung ke alamat Anda.</p>
+                        </div>
+                        <p></p>
+                    </div>
+                </div>
+                
+
+                <!-- Lokasi Brownie.ind -->
+                <div class="form-group">
+                    <label>📍 Lokasi Brownie.ind :</label>
+                    <p> Jl. Klayatan 3 No 32 RT 11 RW 02, Kota Malang, Jawa Timur, Indonesia</p>
+                    <a href="https://maps.app.goo.gl/DmJSLAqE4qVbyz3c6" target="_blank" style="color: var(--primary-brown); text-decoration: underline;"><strong>Lihat di Google Maps</strong></a>
+                </div>
+                <h2></h2>
+
+                <!-- Informasi Tambahan -->
+                <div class="form-info-box">
+                    <p>📌 <strong>Pemesanan Open PO</strong> (Kecuali ready stok)</p>
+                    <p>📌 <strong>Payment Transfer BCA :</strong> 4480667412 A.N Davin Valerian</p>
+                    <p>Note : Pesanan akan diproses setelah pembayaran & bukti transfer diterima.</p>
+                </div>
+                <h3></h3>
+
+                <button type="submit" class="btn btn-primary"><strong>Pesan Sekarang</strong></button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Brownie.ind. All Rights Reserved.</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/brownie.ind?igsh=eGFoc2VqYWp2bDFw" target="_blank">Instagram</a>
+                <a href="https://www.tiktok.com/@brownie.ind?_t=ZS-8xsxnnQ44em&_r=1">TikTok</a>
+                <a href="https://wa.me/6283874555753" target="_blank">WhatsApp</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const variantsContainer = document.getElementById('variantsContainer');
+            const addVariantBtn = document.getElementById('addVariantBtn');
+            const totalPriceDisplay = document.getElementById('totalPrice');
+            const orderForm = document.getElementById('orderForm');
+            let variantCount = 0;
+
+            const browniePrices = {
+                "Double Choco Crunchy Box": 50000,
+                "Brownie Almond Box": 35000,
+                "Brownie Oreo Box": 35000,
+                "Brownie 4 Mix Variant Box": 50000
+            };
+
+            function formatRupiah(number) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(number);
+            }
+
+            function calculateTotalPrice() {
+                let total = 0;
+                document.querySelectorAll('.variant-row').forEach(row => {
+                    const select = row.querySelector('select');
+                    const quantityInput = row.querySelector('input[type="number"]');
+                    const variantName = select.value;
+                    const quantity = parseInt(quantityInput.value) || 0;
+                    if (variantName && quantity > 0 && browniePrices[variantName]) {
+                        total += browniePrices[variantName] * quantity;
+                    }
+                });
+                totalPriceDisplay.textContent = formatRupiah(total);
+            }
+
+            function addVariantRow() {
+                variantCount++;
+                const variantRow = document.createElement('div');
+                variantRow.className = 'variant-row';
+                variantRow.innerHTML = `
+                    <select name="varian[]" required>
+                        <option value="" disabled selected>-- Pilih Varian --</option>
+                        <option value="Double Choco Crunchy Box">Double Choco Crunchy Box</option>
+                        <option value="Brownie Almond Box">Brownie Almond Box</option>
+                        <option value="Brownie Oreo Box">Brownie Oreo Box</option>
+                        <option value="Brownie 4 Mix Variant Box">Brownie 4 Mix Variant Box</option>
+                    </select>
+                    <input type="number" name="jumlah[]" min="1" value="1" required title="Jumlah">
+                    ${variantCount > 1 ? `<button type="button" class="btn-remove-variant" title="Hapus Varian">X</button>` : ''}
+                `;
+                variantsContainer.appendChild(variantRow);
+                attachRowListeners(variantRow);
+                calculateTotalPrice();
+            }
+
+            function removeVariantRow(button) {
+                button.closest('.variant-row').remove();
+                variantCount--;
+                calculateTotalPrice();
+            }
+
+            function attachRowListeners(row) {
+                row.querySelector('select').addEventListener('change', calculateTotalPrice);
+                row.querySelector('input').addEventListener('input', calculateTotalPrice);
+                const removeBtn = row.querySelector('.btn-remove-variant');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', () => removeVariantRow(removeBtn));
+                }
+            }
+            
+            const pickupOptionCards = document.querySelectorAll('.pickup-option-card');
+            const dateInput = document.getElementById('tanggalPengambilan');
+            const timeInput = document.getElementById('jamPengambilan');
+
+            pickupOptionCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    pickupOptionCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    const radio = card.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    if (card.dataset.value === 'Self Pickup') {
+                        dateInput.setAttribute('required', 'required');
+                        timeInput.setAttribute('required', 'required');
+                    } else {
+                        dateInput.removeAttribute('required');
+                        timeInput.removeAttribute('required');
+                    }
+                });
+            });
+
+            addVariantBtn.addEventListener('click', addVariantRow);
+
+            orderForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const namaPemesan = document.getElementById('namaPemesan').value;
+                const alamat = document.getElementById('alamat').value;
+                const pengambilan = document.querySelector('input[name="pengambilan"]:checked').value;
+                
+                let tanggalPengambilan = '';
+                let jamPengambilan = '';
+
+                if (pengambilan === 'Self Pickup') {
+                    tanggalPengambilan = document.getElementById('tanggalPengambilan').value;
+                    jamPengambilan = document.getElementById('jamPengambilan').value;
+                }
+
+                const selectedVariants = [];
+                document.querySelectorAll('.variant-row').forEach(row => {
+                    const variantName = row.querySelector('select').value;
+                    const quantity = row.querySelector('input').value;
+                    if (variantName && quantity) {
+                        selectedVariants.push(`- ${variantName} (${quantity} box)`);
+                    }
+                });
+
+                let waMessage = `FORM PEMESANAN BROWNIE.IND\n\n` +
+                                `📍 Nama Pemesan : ${namaPemesan}\n` +
+                                `📍 Alamat : ${alamat}\n` +
+                                `📍 Pengambilan : ${pengambilan}\n`;
+
+                if (pengambilan === 'Self Pickup') {
+                    waMessage += `📍 Tanggal Pengambilan : ${tanggalPengambilan}\n` +
+                                 `📍 Jam Pengambilan : ${jamPengambilan}\n`;
+                }
+
+                waMessage += `\n📦 Pesanan:\n${selectedVariants.join('\n')}\n`;
+                waMessage += `\n💰 Total Harga: ${totalPriceDisplay.textContent}\n\n`;
+
+                const encodedMessage = encodeURIComponent(waMessage);
+                const whatsappNumber = '6283874555753';
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+                
+                window.open(whatsappUrl, '_blank');
+
+                orderForm.reset();
+                variantsContainer.innerHTML = '';
+                variantCount = 0;
+                addVariantRow();
+                document.querySelector('.pickup-option-card[data-value="Self Pickup"]').click();
+                calculateTotalPrice();
+            });
+
+            addVariantRow();
+            calculateTotalPrice();
+        });
+    </script>
+</body>
+</html>

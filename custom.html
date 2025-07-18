@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Creations - Brownie.ind</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    </head>
+<body>
+
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">Brownie.ind</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="brownies.html">Our Brownies</a></li>
+                <li><a href="custom.html">Custom Creations</a></li>
+                <li><a href="story.html">Our Story</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header container">
+            <h1>Your Vision, Beautifully Baked</h1>
+            <p>Fill out the form below. Once you click submit, your WhatsApp client will open with your custom description!</p>
+        </section>
+
+        <section class="custom-form-section container">
+            <h2>Create Your Custom</h2>
+            <form id="customOrderForm" class="custom-form">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Your Address</label>
+                    <textarea id="address" name="Address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="base">Brownie Base</label>
+                    <textarea id="base" name="Brownie Base" rows="5" placeholder="e.g., 'Classic Chocolate'"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="designDescription">Design Description</label>
+                    <textarea id="designDescription" name="Design Description" rows="5" placeholder="e.g., 'Happy Birthday, Alex!' in white chocolate, dengan hiasan bunga kecil..."></textarea>
+                </div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;"><strong>Notes</strong> : All information will only be discussed if the seller agrees to process the order. The response given for custom orders will take 2 days at the most.</p>
+                <button type="submit" class="btn-primary" style="padding: 15px 30px; font-size: 1.2em;"><strong>Submit Inquiry via WhatsApp</strong></button>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 Brownie.ind. All Rights Reserved.</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/brownie.ind?igsh=eGFoc2VqYWp2bDFw">Instagram</a>
+                <a href="https://www.tiktok.com/@brownie.ind?_t=ZS-8xsxnnQ44em&_r=1">TikTok</a>
+                <a href="https://wa.me/6283874555753" target="_blank">WhatsApp</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('customOrderForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Mencegah pengiriman formulir default
+
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const base = document.getElementById('base').value;
+            // Corrected ID: 'description' was used twice, changed one to 'designDescription'
+            const designDescription = document.getElementById('designDescription').value; 
+
+            // WhatsApp number
+            const whatsappNumber = '6283874555753'; 
+
+            // Building the WhatsApp message using template literals
+            const waMessage = `FORM PEMESANAN CUSTOM BROWNIE.IND
+
+Nama: ${name}
+Alamat: ${address}
+Base Brownie: ${base}
+Deskripsi Desain: ${designDescription}
+
+Notes : All information will only be discussed if the seller agrees to process the order. The response given for custom orders will take 2 days at the most.`;
+
+            // Encoding the message for URL
+            const encodedMessage = encodeURIComponent(waMessage);
+
+            // Building the WhatsApp URL
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+            // Opening the WhatsApp link in a new tab
+            window.open(whatsappUrl, '_blank');
+
+            // Optional: Reset the form after submission
+            this.reset();
+        });
+    </script>
+
+</body>
+</html>
